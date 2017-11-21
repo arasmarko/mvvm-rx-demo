@@ -1,0 +1,136 @@
+Implementing MVVM with RX Swift
+Moving away from MVC arhitecture, KVO observing, async operations and streams to MVVM and Reactive programming. Walk through my day building apps with MVVM and RX and see what's giving me troubles.
+========================================================================================================================
+
+
+
+MVVM - Model, View, ViewModel
+1. Sta je MVVM i zasto se maknit od MVC iako je MVC Apple-ova preporuka
+	- MVC: 
+        -View obavjestava C o promjeni, C komunicira s modelom, model vrati podatke, C ih rendera na View... 
+        - Pogodniji je za web jer imas odvojeno M V i C, i svak radi za sta je zaduzen dok u iOS-u s obzirom da su View i Controller ujedinjeni u VC rezultat je ogroman VC
+        - VC ti postane nemoguc za reuse, za testiranje...
+
+
+	- MVVM: 
+        - V dojavljuje promjenu VM, VM priprema podatke i ako je potrebno komunicira s Modelom, i vraca nazad na View samo podatke koje treba prikazat (i sada je ViewController cisti View!)
+        - Problem je bind-anje! I tu nastupa RX
+        - omogucava lako tersitranje poslovne logike jer je cist i bez UI-a
+        - Problem: fali nekakav ruter, zasto? 
+            - 
+
+
+2. Osnovna pravila za VM:
+	- nema referencu na View
+	- nema importanja UIKit-a
+    
+
+VM: poslovna logika, komunicira s modelom i view-om (kako?).
+
+====================================================================================
+
+UIButton.addTarget(<#T##target: Any?##Any?#>, action: <#T##Selector#>, for: <#T##UIControlEvents#>) 
+NO MORE
+
+====================================================================================
+
+
+DRIVER
+There's Driver who's intended use is to reactively bind an observable sequence to a UI element.
+Driver will also replay it's latest element if there is one to new subscribers.
+Using driver is optional. I like to use it because of it's characteristics and semantics.
+I'll show you in some examples next.
+
+====================================================================================
+///// Dispose bag retain cycle
+final class MyViewController: UIViewController {
+    private let disposeBag = DisposeBag()
+    private let parser = MyModelParser()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let parsedObject = theObservable
+            .map { json in
+                return self.parser.parse(json)
+            }
+            
+        parsedObject.subscribe(onNext:{ _ in 
+            //do something
+        })
+        .disposed(by: disposeBag)
+    }
+}
+1. Because of adding the Disposable into the DisposeBag it means the DisposeBag have a strong reference to Disposable.
+2. The Disposable keeps Observable alive which hold a strong reference to MyViewController because self was used inside map closure.
+3. At the end the ViewController holds a reference to the DisposeBag and … 💥💥BOOM💥💥 … You have a retain cycle! 😱
+
+VC -> DisposeBag -> Disposable -> Observable -> VC = retain cycle
+
+Rjesenje:
+//[...]
+let parsedObject = theObservable
+    .map { [weak self] json in
+		return self?.parser.parse(json) //compile-time error. What should be returned if `self` is nil?
+    }
+//[...]
+
+ili
+
+//[...]
+let parsedObject = theObservable
+    .map { [parser] json in
+        return parser.parse(json)
+    }
+//[...]
+
+The 3rd option would be to use [unowned self] instead of [weak self]. However, I’m not a fan of using an unowned attribute. If something goes wrong you will have a crash 😟.
+====================================================================================
+http://adamborek.com/top-7-rxswift-mistakes/
+
+1. Using wrong DisposeBag
+
+Wrong:
+    dataSource.configureCell = { [unowned self] _, tableView, indexPath, cellViewModel in
+      let cell: TheCell = tableView.dequeueCell(at: indexPath)
+      cellViewModel.image
+        .drive(cell.avatarView.image)
+        .disposed(by: self.disposeBag)
+       return cell
+    }
+
+Good:
+    dataSource.configureCell = { _, tableView, indexPath, cellViewModel in
+        let cell: TheCell = tableView.dequeueCell(at: indexPath)
+        cellViewModel.image
+            .drive(cell.avatarView.image)
+            .disposed(by: cell.disposeBag)
+        return cell
+    }
+            
+    //somewhere in TheCell.swift file
+    class TheCell: UITableViewCell {
+        private(set) var disposeBag = DisposeBag()
+        
+        override func prepareForReuse() {
+            disposeBag = DisposeBag()
+        }
+    }
+
+
+2. Not using drivers on UI
+Traits are awesome because they help communicate and ensure in compile time our assumptions. Take a Driver for example. Its main purpose is to be used at the UI part of the application.
+
+I obey a rule that all sequences which UIViewController or UIView subscribes to should be a Driver.
+
+Why?
+
+With Rx, it’s very easy to change a queue/thread. "With Great Power Comes Great Responsibility" Uncle Ben used to say. As a result, sometimes you can change the thread by a mistake and forget to call observeOn(MainScheduler.instance) before touching the UI. As a result, you have a crash… 💥
+
+3. Overusing subjects & variables
+
+
+====================================================================================
+
+
+

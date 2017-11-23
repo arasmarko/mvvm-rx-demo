@@ -10,10 +10,12 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import RxGesture
 
 class DeveloperViewController: UIViewController {
     
-    let nameLabel = UILabel()
+    let counterLabel = UILabel()
+    let increaseCounterButton = UIButton()
     
     let developerViewModel: DeveloperViewModel
     
@@ -26,7 +28,14 @@ class DeveloperViewController: UIViewController {
     init(developerViewModel: DeveloperViewModel) {
         self.developerViewModel = developerViewModel
         super.init(nibName: nil, bundle: nil)
+        let increaseCounterTaps = increaseCounterButton.rx
+            .tapGesture()
+            .when(UIGestureRecognizerState.recognized)
+            .map({ _ -> Void in
+                return
+            })
         
+        self.developerViewModel.setupIncreaseTaps(increaseCounterTaps: increaseCounterTaps)
         render()
         setupObservables()
     }
@@ -37,25 +46,47 @@ class DeveloperViewController: UIViewController {
     
     func render() {
         self.title = developerViewModel.developer.name
-        nameLabel.text = developerViewModel.developer.name
         view.backgroundColor = .white
-        nameLabel.textColor = .black
-        view.addSubview(nameLabel)
-        nameLabel.snp.makeConstraints { make in
+        counterLabel.textColor = .black
+        counterLabel.text = "\(developerViewModel.counterState)"
+        increaseCounterButton.titleLabel?.text = "+"
+        
+        view.addSubview(counterLabel)
+        counterLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+        
+        view.addSubview(increaseCounterButton)
+        increaseCounterButton.backgroundColor = .red
+        increaseCounterButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(40)
+        }
+
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
+    
+    // 1
     func setupObservables() {
-        developerViewModel.resourceMemoryLeak
+        developerViewModel.counter
             .asObservable()
-            .subscribe(onNext: { [nameLabel] rand in // ZASTO?
-                nameLabel.text = "\(rand)"
-            }).disposed(by: disposeBag)
+            .subscribe(onNext: { [counterLabel] counterValue in // ZASTO?
+                counterLabel.text = "\(counterValue)"
+            })
+            .disposed(by: disposeBag)
     }
+    
+    // 2
+//    func setupObservables() {
+//        developerViewModel.counter
+//            .map { return "\($0)" }
+//            .drive(self.counterLabel.rx.text)
+//            .disposed(by: disposeBag)
+//    }
+
 
 }

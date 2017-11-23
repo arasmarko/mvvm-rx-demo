@@ -36,12 +36,11 @@ class DataService {
         return Observable
             .create({ [unowned self] observer in
                 self.asyncGet(rand: rand, completion: {
-                    print("Search returning \(res.count) for \(name)", Thread.current)
+                    print("Search returning \(res.count) for \(name)")//, Thread.current)
                     return observer.onNext((res))
                 })
                 return Disposables.create()
             })
-            .subscribeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))
     }
     
     

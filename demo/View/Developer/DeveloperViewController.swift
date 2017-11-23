@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import SnapKit
 import RxSwift
 import RxCocoa
-import RxGesture
+import SnapKit
 
 class DeveloperViewController: UIViewController {
     
@@ -28,16 +27,32 @@ class DeveloperViewController: UIViewController {
     init(developerViewModel: DeveloperViewModel) {
         self.developerViewModel = developerViewModel
         super.init(nibName: nil, bundle: nil)
-        let increaseCounterTaps = increaseCounterButton.rx
-            .tapGesture()
-            .when(UIGestureRecognizerState.recognized)
-            .map({ _ -> Void in
-                return
-            })
+        //        let increaseCounterTaps = increaseCounterButton.rx.tap.asObservable()
+        //        self.developerViewModel.setupIncreaseTaps(increaseCounterTaps: increaseCounterTaps)
         
-        self.developerViewModel.setupIncreaseTaps(increaseCounterTaps: increaseCounterTaps)
+        // primjer
+        increaseCounterButton.rx
+            .tap
+            .asObservable()
+            .subscribe(onNext: { tap in
+                print("Tap")
+                if let textInLabel = self.counterLabel.text,
+                    let numberInLabel = Int(textInLabel) {
+                    self.counterLabel.text = "\(numberInLabel+1)"
+                }
+            }).disposed(by: disposeBag)
+        
+        counterLabel.rx
+            .observe(String.self, "text")
+            .subscribe(onNext: { newText in
+                guard let newText = newText else {
+                    return
+                }
+                print("new text:", newText)
+            }).disposed(by: disposeBag)
+        
         render()
-        setupObservables()
+        //        setupObservables()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -49,7 +64,9 @@ class DeveloperViewController: UIViewController {
         view.backgroundColor = .white
         counterLabel.textColor = .black
         counterLabel.text = "\(developerViewModel.counterState)"
-        increaseCounterButton.titleLabel?.text = "+"
+        increaseCounterButton.setTitle("+", for: .normal)
+        increaseCounterButton.backgroundColor = .white
+        increaseCounterButton.setTitleColor(UIColor.black, for: .normal)
         
         view.addSubview(counterLabel)
         counterLabel.snp.makeConstraints { make in
@@ -57,12 +74,11 @@ class DeveloperViewController: UIViewController {
         }
         
         view.addSubview(increaseCounterButton)
-        increaseCounterButton.backgroundColor = .red
         increaseCounterButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview().offset(40)
         }
-
+        
     }
     
     override func viewDidLoad() {
@@ -76,17 +92,23 @@ class DeveloperViewController: UIViewController {
             .asObservable()
             .subscribe(onNext: { [counterLabel] counterValue in // ZASTO?
                 counterLabel.text = "\(counterValue)"
+                }, onError: { (_) in
+                    print("onError")
+            }, onCompleted: {
+                print("onCompleted")
+            }, onDisposed: {
+                print("onDisposed")
             })
             .disposed(by: disposeBag)
     }
     
     // 2
-//    func setupObservables() {
-//        developerViewModel.counter
-//            .map { return "\($0)" }
-//            .drive(self.counterLabel.rx.text)
-//            .disposed(by: disposeBag)
-//    }
-
-
+    //    func setupObservables() {
+    //        developerViewModel.counter
+    //            .map { return "\($0)" }
+    //            .drive(self.counterLabel.rx.text)
+    //            .disposed(by: disposeBag)
+    //    }
+    
+    
 }

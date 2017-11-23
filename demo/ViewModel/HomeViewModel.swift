@@ -12,18 +12,24 @@ import RxCocoa
 import SwiftyJSON
 
 class HomeViewModel {
-    
     var developers: Observable<[DevelopersSection]>!
     let isRefreshing = Variable(false)
     
     init(searchInput: Driver<String>, refreshControlDriver: Driver<String>) {
-        let requestTriggers = Observable.merge(searchInput.asObservable().distinctUntilChanged(), refreshControlDriver.asObservable())
+        let debouncedSearchInput = searchInput.asObservable()
+            .skip(1)
+            .distinctUntilChanged()
+            .debounce(0.3, scheduler: ConcurrentDispatchQueueScheduler.init(qos: .background))
+        
+        let requestTriggers = Observable.merge(debouncedSearchInput, refreshControlDriver.asObservable())
         
         developers = requestTriggers
+            .startWith("")
             .flatMapLatest({ [weak self] searchTerm -> Observable<[DevelopersSection]> in
                 guard let `self` = self else {
                     return Observable.just([])
                 }
+                print("searchTerm", searchTerm)
                 self.isRefreshing.value = true
                 
                 return DataService.shared.simulateFetchingDevelopersByName(name: searchTerm)
@@ -38,7 +44,7 @@ class HomeViewModel {
                                 print("DemoError", error)
                             }
                         }
-                        print("res", devs.count, Thread.current)
+                        print("res", devs.count)//, Thread.current)
                         
                         let developersSection = DevelopersSection(header: "Developers", items: devs)
                         self.isRefreshing.value = false

@@ -176,9 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				FBCE828C1FC08CDC0027C873 /* CustomViews */,
-				FBAE13D51FB74D8E00D52DBE /* HomeViewController.swift */,
-				FB59C2CE1FB84CFA00FF1435 /* DeveloperViewController.swift */,
-				FB59C2D21FB84ECF00FF1435 /* HomeTableViewCell.swift */,
+				FBBA83F61FC70EB8002CDCAE /* Developer */,
+				FBBA83F51FC70EAA002CDCAE /* Home */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -223,6 +222,23 @@
 				FBAE13DE1FB74F5000D52DBE /* DataService.swift */,
 			);
 			path = DataService;
+			sourceTree = "<group>";
+		};
+		FBBA83F51FC70EAA002CDCAE /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				FBAE13D51FB74D8E00D52DBE /* HomeViewController.swift */,
+				FB59C2D21FB84ECF00FF1435 /* HomeTableViewCell.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		FBBA83F61FC70EB8002CDCAE /* Developer */ = {
+			isa = PBXGroup;
+			children = (
+				FB59C2CE1FB84CFA00FF1435 /* DeveloperViewController.swift */,
+			);
+			path = Developer;
 			sourceTree = "<group>";
 		};
 		FBCE828C1FC08CDC0027C873 /* CustomViews */ = {

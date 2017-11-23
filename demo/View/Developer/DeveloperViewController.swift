@@ -27,10 +27,7 @@ class DeveloperViewController: UIViewController {
     init(developerViewModel: DeveloperViewModel) {
         self.developerViewModel = developerViewModel
         super.init(nibName: nil, bundle: nil)
-        //        let increaseCounterTaps = increaseCounterButton.rx.tap.asObservable()
-        //        self.developerViewModel.setupIncreaseTaps(increaseCounterTaps: increaseCounterTaps)
-        
-        // primjer
+
         increaseCounterButton.rx
             .tap
             .asObservable()
@@ -52,7 +49,6 @@ class DeveloperViewController: UIViewController {
             }).disposed(by: disposeBag)
         
         render()
-        //        setupObservables()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -84,31 +80,5 @@ class DeveloperViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
-    
-    // 1
-    func setupObservables() {
-        developerViewModel.counter
-            .asObservable()
-            .subscribe(onNext: { [counterLabel] counterValue in // ZASTO?
-                counterLabel.text = "\(counterValue)"
-                }, onError: { (_) in
-                    print("onError")
-            }, onCompleted: {
-                print("onCompleted")
-            }, onDisposed: {
-                print("onDisposed")
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    // 2
-    //    func setupObservables() {
-    //        developerViewModel.counter
-    //            .map { return "\($0)" }
-    //            .drive(self.counterLabel.rx.text)
-    //            .disposed(by: disposeBag)
-    //    }
-    
     
 }

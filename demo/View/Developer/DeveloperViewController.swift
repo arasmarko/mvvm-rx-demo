@@ -27,32 +27,11 @@ class DeveloperViewController: UIViewController {
     init(developerViewModel: DeveloperViewModel) {
         self.developerViewModel = developerViewModel
         super.init(nibName: nil, bundle: nil)
-        //        let increaseCounterTaps = increaseCounterButton.rx.tap.asObservable()
-        //        self.developerViewModel.setupIncreaseTaps(increaseCounterTaps: increaseCounterTaps)
-        
-        // primjer
-        increaseCounterButton.rx
-            .tap
-            .asObservable()
-            .subscribe(onNext: { tap in
-                print("Tap")
-                if let textInLabel = self.counterLabel.text,
-                    let numberInLabel = Int(textInLabel) {
-                    self.counterLabel.text = "\(numberInLabel+1)"
-                }
-            }).disposed(by: disposeBag)
-        
-        counterLabel.rx
-            .observe(String.self, "text")
-            .subscribe(onNext: { newText in
-                guard let newText = newText else {
-                    return
-                }
-                print("new text:", newText)
-            }).disposed(by: disposeBag)
+        let increaseCounterTaps = increaseCounterButton.rx.tap.asObservable()
+        self.developerViewModel.setupIncreaseTaps(increaseCounterTaps: increaseCounterTaps)
         
         render()
-        //        setupObservables()
+        setupObservables()
     }
     
     required init?(coder aDecoder: NSCoder) {

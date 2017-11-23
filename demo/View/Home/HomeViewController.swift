@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import SnapKit
+import RxGesture
 
 struct DevelopersSection {
     var header: String
@@ -78,16 +79,29 @@ class HomeViewController: UIViewController {
     
     func setupTableView() {
         resultsTableView.register(HomeTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        resultsTableView.estimatedRowHeight = 120
+        resultsTableView.rowHeight = 120
         dataSource = RxTableViewSectionedReloadDataSource<DevelopersSection>(configureCell: { [weak self] (dataSource, tableView, indexPath, item) in
             guard let `self` = self else {
                 return UITableViewCell()
             }
             let cell = self.resultsTableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier, for: indexPath) as! HomeTableViewCell
             cell.setupInfo(developer: item)
+            cell.selectionStyle = .none
+            
+            // wrong disposeBag example
+//            cell.rx
+//                .tapGesture()
+//                .when(.recognized)
+//                .subscribe(onNext: { _ in
+//                    print("itemSelected at", indexPath.row)
+//                }).disposed(by: self.disposeBag)
+            
             return cell
         })
         
-        resultsTableView.rx.itemSelected
+        resultsTableView.rx
+            .itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                 guard let `self` = self else {
                     return

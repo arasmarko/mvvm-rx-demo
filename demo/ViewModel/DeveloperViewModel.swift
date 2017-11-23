@@ -34,6 +34,7 @@ class DeveloperViewModel {
     // 1
     func setupIncreaseTaps(increaseCounterTaps: Observable<Void>) {
         counter = increaseCounterTaps
+//            .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))// Driver example
             .flatMapLatest({ [weak self] _ -> Observable<Int> in
                 guard let `self` = self else {
                     return Observable.just(0)

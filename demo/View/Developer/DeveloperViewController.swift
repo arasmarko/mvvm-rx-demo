@@ -59,7 +59,7 @@ class DeveloperViewController: UIViewController {
         self.title = developerViewModel.developer.name
         view.backgroundColor = .white
         counterLabel.textColor = .black
-        counterLabel.text = "\(developerViewModel.counterState)"
+        counterLabel.text = "0"
         increaseCounterButton.setTitle("+", for: .normal)
         increaseCounterButton.backgroundColor = .white
         increaseCounterButton.setTitleColor(UIColor.black, for: .normal)

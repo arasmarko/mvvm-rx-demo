@@ -18,8 +18,8 @@ enum SimulatedError: Error {
 class DeveloperViewModel {
     var developer: Developer!
     var counterState = 0
-    var counter: Observable<Int>! // 1
-//    var counter: Driver<String>! // 2
+//    var counter: Observable<Int>! // 1
+    var counter: Driver<String>! // 2
     
     let disposeBag = DisposeBag()
     
@@ -32,17 +32,17 @@ class DeveloperViewModel {
     }
     
     // 1
-    func setupIncreaseTaps(increaseCounterTaps: Observable<Void>) {
-        counter = increaseCounterTaps
-//            .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))// Driver example
-            .flatMapLatest({ [weak self] _ -> Observable<Int> in
-                guard let `self` = self else {
-                    return Observable.just(0)
-                }
-                self.counterState += 1
-                return Observable.just(self.counterState)
-            })
-    }
+//    func setupIncreaseTaps(increaseCounterTaps: Observable<Void>) {
+//        counter = increaseCounterTaps
+////            .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))// Driver example
+//            .flatMapLatest({ [weak self] _ -> Observable<Int> in
+//                guard let `self` = self else {
+//                    return Observable.just(0)
+//                }
+//                self.counterState += 1
+//                return Observable.just(self.counterState)
+//            })
+//    }
     
 //    // 1.1 Error handling
 //    func setupIncreaseTaps(increaseCounterTaps: Observable<Void>) {
@@ -68,16 +68,41 @@ class DeveloperViewModel {
 //    }
     
 //     2
-//    func setupIncreaseTaps(increaseCounterTaps: Observable<Void>) {
-//        counter = increaseCounterTaps
-//            .flatMapLatest { [weak self] _ -> Observable<String> in
-//                guard let `self` = self else {
-//                    return Observable.just("0")
-//                }
-//                self.counterState += 1
-//                return Observable.just("\(self.counterState)")
-//            }
-//            .asDriver(onErrorJustReturn: "0")
-//    }
+    func setupIncreaseTaps(increaseCounterTaps: Observable<Void>) {
+        counter = increaseCounterTaps
+            .flatMapLatest { [weak self] _ -> Observable<String> in
+                guard let `self` = self else {
+                    return Observable.just("0")
+                }
+                self.counterState += 1
+                return Observable.just("\(self.counterState)")
+            }
+            .asDriver(onErrorJustReturn: "0")
+    }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

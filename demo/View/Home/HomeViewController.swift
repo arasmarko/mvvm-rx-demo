@@ -103,6 +103,7 @@ class HomeViewController: UIViewController {
         resultsTableView.rx
             .itemSelected
             .subscribe(onNext: { [weak self] indexPath in
+                print("aaa", indexPath.row)
                 guard let `self` = self else {
                     return
                 }

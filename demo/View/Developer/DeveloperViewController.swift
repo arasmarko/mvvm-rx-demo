@@ -65,29 +65,14 @@ class DeveloperViewController: UIViewController {
     }
     
     
-    // 1
     func setupObservables() {
         developerViewModel.counter
             .asObservable()
-            .subscribe(onNext: { [counterLabel] counterValue in // ZASTO?
+            .subscribe(onNext: { [counterLabel] counterValue in
                 counterLabel.text = "\(counterValue)"
-                }, onError: { (_) in
-                    print("onError")
-            }, onCompleted: {
-                print("onCompleted")
-            }, onDisposed: {
-                print("onDisposed")
             })
             .disposed(by: disposeBag)
     }
-    
-    // 2
-    //    func setupObservables() {
-    //        developerViewModel.counter
-    //            .map { return "\($0)" }
-    //            .drive(self.counterLabel.rx.text)
-    //            .disposed(by: disposeBag)
-    //    }
     
     
 }

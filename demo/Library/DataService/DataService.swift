@@ -17,11 +17,13 @@ class DataService {
     let dev2: [String: Any] = ["id": 2, "name": "Johnny", "team": "android"]
     let dev3: [String: Any] = ["id": 3, "name": "Johan", "team": "iOS"]
     let dev4: [String: Any] = ["id": 4, "name": "Jacob", "team": "web"]
+    let dev5: [String: Any] = ["id": 5, "name": "Alex", "team": "iOS"]
+    let dev6: [String: Any] = ["id": 6, "name": "Mark", "team": "web"]
     
     let test = PublishSubject<[[String: Any]]>()
     
     func simulateFetchingDevelopersByName(name: String) -> Observable<[[String: Any]]> {
-        let allDevelopers = [dev1, dev2, dev3, dev4]
+        let allDevelopers = [dev1, dev2, dev3, dev4, dev5, dev6]
         let res = allDevelopers.filter({ dev in
             guard !name.isEmpty else {
                 return true

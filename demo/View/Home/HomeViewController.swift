@@ -89,31 +89,16 @@ class HomeViewController: UIViewController {
             cell.setupInfo(developer: item)
             cell.selectionStyle = .none
             
-            // wrong disposeBag example
-//            cell.rx
-//                .tapGesture()
-//                .when(.recognized)
-//                .subscribe(onNext: { _ in
-//                    print("itemSelected at", indexPath.row)
-//                }).disposed(by: self.disposeBag)
+            // wrong disposeBag
+            cell.rx
+                .tapGesture()
+                .when(.recognized)
+                .subscribe(onNext: { _ in
+                    print("itemSelected at", indexPath.row)
+                }).disposed(by: self.disposeBag)
             
             return cell
         })
-        
-        resultsTableView.rx
-            .itemSelected
-            .subscribe(onNext: { [weak self] indexPath in
-                print("aaa", indexPath.row)
-                guard let `self` = self else {
-                    return
-                }
-                guard let cell = self.resultsTableView.cellForRow(at: indexPath) as? HomeTableViewCell, let dev = cell.developer else {
-                    return
-                }
-                let devVM = DeveloperViewModel(developer: dev)
-                let devVC = DeveloperViewController(developerViewModel: devVM)
-                self.navigationController?.pushViewController(devVC, animated: true)
-            }).disposed(by: disposeBag)
         
     }
     

@@ -17,6 +17,7 @@ class HomeViewModel {
     
     init(searchInput: Driver<String>, refreshControlDriver: Driver<String>) {
         let debouncedSearchInput = searchInput.asObservable()
+            .startWith("")
             .skip(1)
             .distinctUntilChanged()
 //            .debounce(0.3, scheduler: ConcurrentDispatchQueueScheduler.init(qos: .background))
@@ -24,7 +25,6 @@ class HomeViewModel {
         let requestTriggers = Observable.merge(debouncedSearchInput, refreshControlDriver.asObservable())
         
         developers = requestTriggers
-            .startWith("")
             .flatMapLatest({ [weak self] searchTerm -> Observable<[DevelopersSection]> in
                 guard let `self` = self else {
                     return Observable.just([])

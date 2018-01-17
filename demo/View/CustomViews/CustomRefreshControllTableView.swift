@@ -21,24 +21,24 @@ class CustomRefreshControllTableView: UITableView {
     override init(frame: CGRect, style: UITableViewStyle) {
         super.init(frame: frame, style: style)
         
-        self.rx.contentOffset.startWith(CGPoint.zero)
-            .subscribe(onNext: { [weak self] point in
-                guard let `self` = self else {
-                    return
-                }
-                if point.y < 0 {
-                    let position = Double(point.y) * -1
-                    if position < 100 && !self.loader.isAnimating && self.images.count > Int(position/1.44) {
-                        self.loader.image = self.images[Int(position/1.44)]
-                    }
-                }
-            }).disposed(by: disposeBag)
+//        self.rx.contentOffset.startWith(CGPoint.zero)
+//            .subscribe(onNext: { [weak self] point in
+//                guard let `self` = self else {
+//                    return
+//                }
+//                if point.y < 0 {
+//                    let position = Double(point.y) * -1
+//                    if position < 100 && !self.loader.isAnimating && self.images.count > Int(position/1.44) {
+//                        self.loader.image = self.images[Int(position/1.44)]
+//                    }
+//                }
+//            }).disposed(by: disposeBag)
         
         self.refreshControl = UIRefreshControl()
-        self.refreshControl?.backgroundColor = UIColor.clear
-        self.refreshControl?.tintColor = UIColor.clear
+//        self.refreshControl?.backgroundColor = UIColor.clear
+//        self.refreshControl?.tintColor = UIColor.clear
         
-        self.addCustomLoader()
+//        self.addCustomLoader()
     }
     
     required init?(coder aDecoder: NSCoder) {

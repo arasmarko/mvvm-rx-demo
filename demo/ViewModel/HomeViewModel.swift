@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 import SwiftyJSON
+import ObjectMapper
 
 class HomeViewModel {
     var developers: Observable<[DevelopersSection]>!
@@ -35,15 +36,27 @@ class HomeViewModel {
                 return DataService.shared.simulateFetchingDevelopersByName(name: searchTerm)
                     .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))
                     .flatMapLatest { response -> Observable<[DevelopersSection]> in
-                        let json = JSON(response)
+//                        let json = JSON(response)
                         var devs: [Developer] = []
-                        for (_, dev) in json {
+//                        for (_, dev) in json {
+//                            do {
+////                                devs.append(try Developer(json: dev))
+//                                devs.append(try Developer(JSON: dev.dictionaryObject))
+//                            } catch DemoError.modelMapping(let error) {
+//                                print("DemoError", error)
+//                            }
+//                        }
+                        
+                        for (_, dev) in response.enumerated() {
                             do {
-                                devs.append( try Developer(json: dev))
+                                devs.append(try Developer(JSON: dev))
                             } catch DemoError.modelMapping(let error) {
                                 print("DemoError", error)
+                            } catch (let error) {
+                                print("DemoError2", error)
                             }
                         }
+
                         
                         let developersSection = DevelopersSection(header: "Developers", items: devs)
                         self.isRefreshing.value = false

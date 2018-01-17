@@ -13,6 +13,8 @@ target 'demo' do
 
     pod 'DeallocationChecker', '~> 1.0.2'
     
+    pod 'ObjectMapper'
+    
     post_install do |installer|
         installer.pods_project.targets.each do |target|
             if target.name == ‘RxSwift’

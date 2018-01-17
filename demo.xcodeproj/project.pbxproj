@@ -11,6 +11,7 @@
 		FB59C2CF1FB84CFA00FF1435 /* DeveloperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB59C2CE1FB84CFA00FF1435 /* DeveloperViewController.swift */; };
 		FB59C2D11FB84D5A00FF1435 /* DeveloperViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB59C2D01FB84D5A00FF1435 /* DeveloperViewModel.swift */; };
 		FB59C2D31FB84ECF00FF1435 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB59C2D21FB84ECF00FF1435 /* HomeTableViewCell.swift */; };
+		FB9EADC3200F55840064DE4E /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9EADC2200F55840064DE4E /* HomeCoordinator.swift */; };
 		FBAE13A01FB7484100D52DBE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAE139F1FB7484100D52DBE /* AppDelegate.swift */; };
 		FBAE13A81FB7484100D52DBE /* demo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FBAE13A61FB7484100D52DBE /* demo.xcdatamodeld */; };
 		FBAE13AA1FB7484100D52DBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBAE13A91FB7484100D52DBE /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		FB59C2CE1FB84CFA00FF1435 /* DeveloperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperViewController.swift; sourceTree = "<group>"; };
 		FB59C2D01FB84D5A00FF1435 /* DeveloperViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperViewModel.swift; sourceTree = "<group>"; };
 		FB59C2D21FB84ECF00FF1435 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		FB9EADC2200F55840064DE4E /* HomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
 		FBAE139C1FB7484100D52DBE /* demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBAE139F1FB7484100D52DBE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FBAE13A71FB7484100D52DBE /* demo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = demo.xcdatamodel; sourceTree = "<group>"; };
@@ -112,6 +114,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		FB9EADC1200F55600064DE4E /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				FB9EADC2200F55840064DE4E /* HomeCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
 		FBAE13931FB7484100D52DBE = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +147,7 @@
 		FBAE139E1FB7484100D52DBE /* demo */ = {
 			isa = PBXGroup;
 			children = (
+				FB9EADC1200F55600064DE4E /* Coordinator */,
 				FBAE13DB1FB74F2C00D52DBE /* Library */,
 				FBAE13D21FB74C5000D52DBE /* Model */,
 				FBAE13D11FB74C4A00D52DBE /* ViewModel */,
@@ -434,6 +445,7 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-demo/Pods-demo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DeallocationChecker/DeallocationChecker.framework",
 				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
 				"${BUILT_PRODUCTS_DIR}/RxGesture/RxGesture.framework",
@@ -445,6 +457,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DeallocationChecker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Differentiator.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGesture.framework",
@@ -474,6 +487,7 @@
 				FBCE828E1FC08CF20027C873 /* CustomRefreshControllTableView.swift in Sources */,
 				FB59C2D31FB84ECF00FF1435 /* HomeTableViewCell.swift in Sources */,
 				FBAE13D41FB74D3B00D52DBE /* Wireframe.swift in Sources */,
+				FB9EADC3200F55840064DE4E /* HomeCoordinator.swift in Sources */,
 				FB59C2D11FB84D5A00FF1435 /* DeveloperViewModel.swift in Sources */,
 				FBAE13D61FB74D8E00D52DBE /* HomeViewController.swift in Sources */,
 			);

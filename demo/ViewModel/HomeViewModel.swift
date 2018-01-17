@@ -12,9 +12,15 @@ import RxCocoa
 import SwiftyJSON
 import ObjectMapper
 
-class HomeViewModel {
+class HomeViewModel: Transitionable {
+    var navigationCoordinator: CoordinatorType?
+    
     var developers: Observable<[DevelopersSection]>!
     let isRefreshing = Variable(false)
+    
+    let developerSubject = PublishSubject<Developer>()
+    
+    fileprivate let disposeBag = DisposeBag()
     
     init(searchInput: Driver<String>, refreshControlDriver: Driver<String>) {
         let debouncedSearchInput = searchInput.asObservable()
@@ -36,16 +42,7 @@ class HomeViewModel {
                 return DataService.shared.simulateFetchingDevelopersByName(name: searchTerm)
                     .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))
                     .flatMapLatest { response -> Observable<[DevelopersSection]> in
-//                        let json = JSON(response)
                         var devs: [Developer] = []
-//                        for (_, dev) in json {
-//                            do {
-////                                devs.append(try Developer(json: dev))
-//                                devs.append(try Developer(JSON: dev.dictionaryObject))
-//                            } catch DemoError.modelMapping(let error) {
-//                                print("DemoError", error)
-//                            }
-//                        }
                         
                         for (_, dev) in response.enumerated() {
                             do {
@@ -62,12 +59,17 @@ class HomeViewModel {
                         self.isRefreshing.value = false
                         return Observable.just([developersSection])
                 }
-                
-                
             })
         
-        
-        
+        developerSubject
+            .asObservable()
+            .subscribe(onNext: { [weak self] in
+                guard let `self` = self else {
+                    return
+                }
+                self.navigationCoordinator?.performTransition(transition: .showDeveloper($0))
+            })
+            .disposed(by: disposeBag)
     }
     
 }

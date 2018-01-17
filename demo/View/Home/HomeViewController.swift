@@ -47,6 +47,13 @@ class HomeViewController: UIViewController {
             }.asDriver(onErrorJustReturn: "")
         
         homeViewModel = HomeViewModel(searchInput: searchTextField.rx.text.orEmpty.asDriver(), refreshControlDriver: refreshControlDriver)
+        
+        resultsTableView
+            .rx
+            .modelSelected(Developer.self)
+            .bind(to: homeViewModel.developerSubject)
+            .disposed(by: disposeBag)
+        
         setupTableView()
         setupObservables()
     }
@@ -81,6 +88,7 @@ class HomeViewController: UIViewController {
         resultsTableView.register(HomeTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         resultsTableView.estimatedRowHeight = 120
         resultsTableView.rowHeight = 120
+        
         dataSource = RxTableViewSectionedReloadDataSource<DevelopersSection>(configureCell: { [weak self] (dataSource, tableView, indexPath, item) in
             guard let `self` = self else {
                 return UITableViewCell()
@@ -92,19 +100,19 @@ class HomeViewController: UIViewController {
             return cell
         })
         
-        resultsTableView.rx
-            .itemSelected
-            .subscribe(onNext: { [weak self] indexPath in 
-                guard let `self` = self else {
-                    return
-                }
-                guard let cell = self.resultsTableView.cellForRow(at: indexPath) as? HomeTableViewCell, let dev = cell.developer else {
-                    return
-                }
-                let devVM = DeveloperViewModel(developer: dev)
-                let devVC = DeveloperViewController(developerViewModel: devVM)
-                self.navigationController?.pushViewController(devVC, animated: true)
-            }).disposed(by: disposeBag)
+//        resultsTableView.rx
+//            .itemSelected
+//            .subscribe(onNext: { [weak self] indexPath in
+//                guard let `self` = self else {
+//                    return
+//                }
+//                guard let cell = self.resultsTableView.cellForRow(at: indexPath) as? HomeTableViewCell, let dev = cell.developer else {
+//                    return
+//                }
+//                let devVM = DeveloperViewModel(developer: dev)
+//                let devVC = DeveloperViewController(developerViewModel: devVM)
+//                self.navigationController?.pushViewController(devVC, animated: true)
+//            }).disposed(by: disposeBag)
         
     }
     

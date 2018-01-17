@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import SwiftyJSON
+import RxCocoa
 
 class DataService {
     static let shared = DataService()

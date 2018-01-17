@@ -18,8 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        Wireframe.shared.start(window: window!)
+//        Wireframe.shared.start(window: window!)
         
+        let appCoordinator = AppCoordinator()
+        
+        window?.rootViewController = appCoordinator.baseController
 //        _ = Observable<Int>
 //            .interval(1, scheduler: MainScheduler.instance)
 //            .subscribe(onNext: { _ in

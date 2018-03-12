@@ -63,24 +63,12 @@ class DeveloperViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
-    
-    // 1
-//    func setupObservables() {
-//        developerViewModel.counter
-//            .asObservable()
-//            .subscribe(onNext: { [counterLabel] counterValue in
-//                counterLabel.text = "\(counterValue)"
-//            })
-//            .disposed(by: disposeBag)
-//    }
-//
-    // 2
-        func setupObservables() {
-            developerViewModel.counter
-                .drive(self.counterLabel.rx.text)
-                .disposed(by: disposeBag)
-        }
+
+    func setupObservables() {
+        developerViewModel.counter
+            .drive(self.counterLabel.rx.text)
+            .disposed(by: disposeBag)
+    }
     
     
 }

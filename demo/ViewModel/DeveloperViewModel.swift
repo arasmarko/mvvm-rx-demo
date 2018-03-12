@@ -22,10 +22,6 @@ class DeveloperViewModel {
     
     let disposeBag = DisposeBag()
     
-    deinit {
-        print("deinit DeveloperViewModel")
-    }
-    
     init(developer: Developer) {
         self.developer = developer
     }

@@ -20,10 +20,6 @@ class DeveloperViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     
-    deinit {
-        print("deinit DeveloperViewController")
-    }
-    
     init(developerViewModel: DeveloperViewModel) {
         self.developerViewModel = developerViewModel
         super.init(nibName: nil, bundle: nil)
@@ -63,7 +59,6 @@ class DeveloperViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
     
     func setupObservables() {
         developerViewModel.counter

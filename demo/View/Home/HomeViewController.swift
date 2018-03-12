@@ -89,14 +89,6 @@ class HomeViewController: UIViewController {
             cell.setupInfo(developer: item)
             cell.selectionStyle = .none
             
-            // wrong disposeBag example
-//            cell.rx
-//                .tapGesture()
-//                .when(.recognized)
-//                .subscribe(onNext: { _ in
-//                    print("itemSelected at", indexPath.row)
-//                }).disposed(by: self.disposeBag)
-            
             return cell
         })
         

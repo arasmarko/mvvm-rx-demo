@@ -18,14 +18,8 @@ enum SimulatedError: Error {
 class DeveloperViewModel {
     var developer: Developer!
     var counterState = 0
-//    var counter: Observable<Int>! // 1
-    var counter: Driver<String>! // 2
-    
+    var counter: Driver<String>!
     let disposeBag = DisposeBag()
-    
-    deinit {
-        print("deinit DeveloperViewModel")
-    }
     
     init(developer: Developer) {
         self.developer = developer
@@ -33,39 +27,16 @@ class DeveloperViewModel {
 
     func setupIncreaseTaps(increaseCounterTaps: Observable<Void>) {
         counter = increaseCounterTaps
-            .flatMapLatest { [weak self] _ -> Observable<String> in
+            .do(onNext: { [weak self] a in
+                self?.counterState += 1
+            })
+            .flatMap { [weak self] _ -> Observable<String> in
                 guard let `self` = self else {
                     return Observable.just("0")
                 }
-                self.counterState += 1
                 return Observable.just("\(self.counterState)")
             }
             .asDriver(onErrorJustReturn: "0")
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

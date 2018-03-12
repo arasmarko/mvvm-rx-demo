@@ -114,8 +114,7 @@ class HomeViewController: UIViewController {
 extension HomeViewController {
     func setupObservables() {
         homeViewModel.developers
-            .observeOn(MainScheduler.instance)
-            .bind(to: self.resultsTableView.rx.items(dataSource: self.dataSource))
+            .drive(self.resultsTableView.rx.items(dataSource: self.dataSource))
             .disposed(by: disposeBag)
         
         resultsTableView.bindRefreshing(isRefreshing: homeViewModel.isRefreshing)

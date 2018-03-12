@@ -70,5 +70,4 @@ class DeveloperViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    
 }

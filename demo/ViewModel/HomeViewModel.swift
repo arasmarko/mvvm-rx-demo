@@ -12,7 +12,7 @@ import RxCocoa
 import SwiftyJSON
 
 class HomeViewModel {
-    var developers: Observable<[DevelopersSection]>!
+    var developers: Driver<[DevelopersSection]>!
     let isRefreshing = Variable(false)
     
     init(searchInput: Driver<String>, refreshControlDriver: Driver<String>) {
@@ -22,15 +22,13 @@ class HomeViewModel {
             .distinctUntilChanged()
         
         let requestTriggers = Observable.merge(debouncedSearchInput, refreshControlDriver.asObservable())
-        
+
         developers = requestTriggers
-            .flatMapLatest({ [weak self] searchTerm -> Observable<[DevelopersSection]> in
-                guard let `self` = self else {
-                    return Observable.just([])
-                }
+            .do(onNext: { [weak self] searchTerm in
                 print("searchTerm", searchTerm)
-                self.isRefreshing.value = true
-                
+                self?.isRefreshing.value = true
+            })
+            .flatMapLatest({ searchTerm -> Observable<[DevelopersSection]> in
                 return DataService.shared.simulateFetchingDevelopersByName(name: searchTerm)
                     .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))
                     .flatMapLatest { response -> Observable<[DevelopersSection]> in
@@ -43,17 +41,14 @@ class HomeViewModel {
                                 print("DemoError", error)
                             }
                         }
-                        
+
                         let developersSection = DevelopersSection(header: "Developers", items: devs)
-                        self.isRefreshing.value = false
                         return Observable.just([developersSection])
-                }
-                
-                
+                    }
             })
-        
-        
-        
+            .do(onNext: { [weak self] _ in
+                self?.isRefreshing.value = false
+            }).asDriver(onErrorJustReturn: [])
     }
     
 }

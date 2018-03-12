@@ -19,7 +19,7 @@ struct DevelopersSection {
 }
 extension DevelopersSection: SectionModelType {
     typealias Item = Developer
-    
+
     init(original: DevelopersSection, items: [Item]) {
         self = original
         self.items = items
@@ -28,33 +28,33 @@ extension DevelopersSection: SectionModelType {
 
 class HomeViewController: UIViewController {
     let searchTextField = UITextField()
-    
+
     let resultsTableView = CustomRefreshControllTableView(frame: .zero, style: .plain)
     var dataSource: RxTableViewSectionedReloadDataSource<DevelopersSection>!
     let cellReuseIdentifier = "HomeTableViewCell"
-    
+
     var homeViewModel: HomeViewModel!
     let disposeBag = DisposeBag()
-    
+
     init() {
         super.init(nibName: nil, bundle: nil)
-        
+
         render()
         let refreshControlDriver = resultsTableView.refreshControl!.rx
             .controlEvent(.valueChanged)
             .map { _ -> String in
                 return self.searchTextField.text ?? ""
             }.asDriver(onErrorJustReturn: "")
-        
+
         homeViewModel = HomeViewModel(searchInput: searchTextField.rx.text.orEmpty.asDriver(), refreshControlDriver: refreshControlDriver)
         setupTableView()
         setupObservables()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func render() {
         searchTextField.placeholder = "Search Developers"
         self.title = "Search Developers"
@@ -67,7 +67,7 @@ class HomeViewController: UIViewController {
             make.right.equalToSuperview()
             make.height.greaterThanOrEqualTo(60)
         }
-        
+
         view.addSubview(resultsTableView)
         resultsTableView.snp.makeConstraints { (make) in
             make.top.equalToSuperview().inset(148)
@@ -76,7 +76,7 @@ class HomeViewController: UIViewController {
             make.bottom.equalToSuperview()
         }
     }
-    
+
     func setupTableView() {
         resultsTableView.register(HomeTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         resultsTableView.estimatedRowHeight = 120
@@ -88,10 +88,10 @@ class HomeViewController: UIViewController {
             let cell = self.resultsTableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier, for: indexPath) as! HomeTableViewCell
             cell.setupInfo(developer: item)
             cell.selectionStyle = .none
-            
+
             return cell
         })
-        
+
         resultsTableView.rx
             .itemSelected
             .subscribe(onNext: { [weak self] indexPath in
@@ -105,19 +105,18 @@ class HomeViewController: UIViewController {
                 let devVC = DeveloperViewController(developerViewModel: devVM)
                 self.navigationController?.pushViewController(devVC, animated: true)
             }).disposed(by: disposeBag)
-        
+
     }
-    
+
 }
 
 // MARK: - Observables
 extension HomeViewController {
     func setupObservables() {
         homeViewModel.developers
-            .observeOn(MainScheduler.instance)
-            .bind(to: self.resultsTableView.rx.items(dataSource: self.dataSource))
+            .drive(self.resultsTableView.rx.items(dataSource: self.dataSource))
             .disposed(by: disposeBag)
-        
+
         resultsTableView.bindRefreshing(isRefreshing: homeViewModel.isRefreshing)
     }
 }

@@ -29,11 +29,13 @@ class DeveloperViewModel {
     func setupIncreaseTaps(increaseCounterTaps: Observable<Void>) {
         counter = increaseCounterTaps
             .observeOn(ConcurrentDispatchQueueScheduler.init(qos: .background))
+            .do(onNext: { [weak self] a in
+                self?.counterState += 1
+            })
             .flatMapLatest({ [weak self] _ -> Observable<String> in
                 guard let `self` = self else {
                     return Observable.just("0")
                 }
-                self.counterState += 1
                 return Observable.just("\(self.counterState)")
             })
     }

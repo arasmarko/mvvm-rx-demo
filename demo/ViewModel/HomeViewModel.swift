@@ -19,7 +19,6 @@ class HomeViewModel {
         let debouncedSearchInput = searchInput.asObservable()
             .skip(1)
             .distinctUntilChanged()
-//            .debounce(0.3, scheduler: ConcurrentDispatchQueueScheduler.init(qos: .background))
         
         let requestTriggers = Observable.merge(debouncedSearchInput, refreshControlDriver.asObservable())
         

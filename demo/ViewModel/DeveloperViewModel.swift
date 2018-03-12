@@ -18,8 +18,7 @@ enum SimulatedError: Error {
 class DeveloperViewModel {
     var developer: Developer!
     var counterState = 0
-//    var counter: Observable<Int>! // 1
-    var counter: Driver<String>! // 2
+    var counter: Driver<String>!
     
     let disposeBag = DisposeBag()
     
@@ -44,28 +43,3 @@ class DeveloperViewModel {
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

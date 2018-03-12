@@ -88,14 +88,13 @@ class HomeViewController: UIViewController {
             let cell = self.resultsTableView.dequeueReusableCell(withIdentifier: self.cellReuseIdentifier, for: indexPath) as! HomeTableViewCell
             cell.setupInfo(developer: item)
             cell.selectionStyle = .none
-            
-            // wrong disposeBag
+
             cell.rx
                 .tapGesture()
                 .when(.recognized)
                 .subscribe(onNext: { _ in
                     print("itemSelected at", indexPath.row)
-                }).disposed(by: self.disposeBag)
+                }).disposed(by: self.disposeBag)// wrong disposeBag
             
             return cell
         })

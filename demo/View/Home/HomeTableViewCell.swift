@@ -13,7 +13,7 @@ import RxCocoa
 class HomeTableViewCell: UITableViewCell {
     
     var developer: Developer!
-    let disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,6 +27,7 @@ class HomeTableViewCell: UITableViewCell {
     func setupInfo(developer: Developer) {
         self.developer = developer
         self.textLabel?.text = developer.name
+        disposeBag = DisposeBag() // if we didn't do this, all the previous subscriptions wouldn't be disposed
     }
 
 }

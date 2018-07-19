@@ -94,8 +94,10 @@ class HomeViewController: UIViewController {
                 .when(.recognized)
                 .subscribe(onNext: { _ in
                     print("itemSelected at", indexPath.row)
-                }).disposed(by: self.disposeBag)// wrong disposeBag
-            
+//                }).disposed(by: self.disposeBag)// wrong disposeBag
+                }).disposed(by: cell.disposeBag)// good disposeBag
+
+
             return cell
         })
         
